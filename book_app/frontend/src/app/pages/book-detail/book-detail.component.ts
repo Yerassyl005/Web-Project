@@ -3,24 +3,23 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { BookService } from '../../services/book.service';
 import { Book } from '../../models/book.interface';
+import { BookReaderComponent } from '../../components/book-reader/book-reader.component';
 
 @Component({
   selector: 'app-book-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, BookReaderComponent],
   template: `
     <div class="container">
       <button class="back-button" routerLink="/">
         <i class="fas fa-arrow-left"></i> Back to Books
       </button>
-
       @if (isLoading) {
         <div class="loading">
           <div class="loader"></div>
           <p>Loading book details...</p>
         </div>
       }
-
       @if (error) {
         <div class="error">
           <i class="fas fa-exclamation-circle"></i>
@@ -76,20 +75,19 @@ import { Book } from '../../models/book.interface';
               }
             </div>
 
-            @if (book.hasFile || book.hasAudio) {
-              <div class="action-buttons">
-                @if (book.hasFile) {
-                  <a [href]="book.filePath" class="download-button" target="_blank">
-                    <i class="fas fa-download"></i> Download PDF
-                  </a>
-                }
-                @if (book.hasAudio) {
-                  <a [href]="book.oldFileUrl" class="download-button audio" target="_blank">
-                    <i class="fas fa-headphones"></i> Listen Audio
-                  </a>
-                }
-              </div>
-            }
+            <div class="action-buttons">
+              @if (book.hasFile) {
+                <app-book-reader [book]="book"></app-book-reader>
+                <a [href]="book.filePath" class="download-button" target="_blank">
+                  <i class="fas fa-download"></i> Download PDF
+                </a>
+              }
+              @if (book.hasAudio) {
+                <a [href]="book.oldFileUrl" class="download-button audio" target="_blank">
+                  <i class="fas fa-headphones"></i> Listen Audio
+                </a>
+              }
+            </div>
           </div>
         </div>
       }
