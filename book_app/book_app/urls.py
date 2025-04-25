@@ -23,5 +23,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/book/', BookListAPIView.as_view(), name='book-list'),
     path('api/book/<int:id>/', BookDetailAPIView.as_view(), name='book-detail'),
-    path('api/auth/', include('backend.authentication.urls')),
+    path('api/auth/', include('authentication.urls')),
 ]

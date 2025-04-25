@@ -4,7 +4,7 @@ from rest_framework import generics
 from .models import Book
 from .tools import BookPagination
 from rest_framework import generics, filters
-from django_filters.rest_framework import DjangoFilterBackend # type: ignore
+from django_filters.rest_framework import DjangoFilterBackend 
 from rest_framework.renderers import JSONRenderer
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
@@ -15,8 +15,7 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 from .models import Category, ReadingProgress
 from .serializers import (
-    BookSerializer, CategorySerializer, ReadingProgressSerializer,
-    LoginSerializer, UserSerializer
+    BookSerializer, ReadingProgressSerializer, UserSerializer
 )
 
 
@@ -42,17 +41,6 @@ class BookDetailAPIView(generics.RetrieveAPIView):
     serializer_class = BookSerializer
     lookup_field = 'id'
 
-@api_view(['GET'])
-def category_list(request):
-    categories = Category.objects.all()
-    serializer = CategorySerializer(categories, many=True)
-    return Response(serializer.data)
-
-@api_view(['GET'])
-def books_by_category(request, category_id):
-    books = Book.objects.filter(category_id=category_id, qStatus=1)
-    serializer = BookSerializer(books, many=True)
-    return Response(serializer.data)
 
 class BookView(APIView):
     permission_classes = [IsAuthenticated]
@@ -93,33 +81,3 @@ class ReadingProgressView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class LoginView(APIView):
-    def post(self, request):
-        serializer = LoginSerializer(data=request.data)
-        if serializer.is_valid():
-            user = authenticate(
-                username=serializer.validated_data['username'],
-                password=serializer.validated_data['password']
-            )
-            if user:
-                token, _ = Token.objects.get_or_create(user=user)
-                return Response({
-                    'token': token.key,
-                    'user': UserSerializer(user).data
-                })
-            return Response(
-                {'error': 'Invalid credentials'},
-                status=status.HTTP_401_UNAUTHORIZED
-            )
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class LogoutView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        request.user.auth_token.delete()
-        return Response(status=status.HTTP_200_OK)
-
-    
-

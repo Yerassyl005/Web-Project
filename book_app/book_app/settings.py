@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'rest_framework_simplejwt',
-    'backend.authentication',
+    'authentication',
 ]
 
 MIDDLEWARE = [
@@ -51,7 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'backend.authentication.middleware.JWTAuthenticationMiddleware',
+    'authentication.middleware.JWTAuthenticationMiddleware',
 ]
 
 ROOT_URLCONF = "book_app.urls"
