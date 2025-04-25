@@ -17,7 +17,7 @@ class Book(models.Model):
     shortDescription = models.TextField()
     thumbnailUrl = models.CharField(max_length=255)
     oldFileUrl = models.CharField(max_length=255)
-    filePath = models.CharField(max_length=255)
+    filePath = models.CharField(max_length=255, null=True, blank=True)
     hasAudio = models.BooleanField(default=False)
     hasFile = models.BooleanField(default=False)
     language = models.CharField(max_length=255, default='kz')
@@ -25,7 +25,7 @@ class Book(models.Model):
     addTime = models.IntegerField()
     updateTime = models.IntegerField()
     qStatus = models.BooleanField(default=False)
-    html = models.TextField()
+    html = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return self.title
