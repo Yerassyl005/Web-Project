@@ -7,16 +7,18 @@ import re
 
 class JWTAuthenticationMiddleware(MiddlewareMixin):
     def process_request(self, request):
-        print("Middleware called for path:", request.path_info)
-        print("Request method:", request.method)
-        print("Request headers:", request.headers)
+        if request.path_info.startswith('/admin') or request.path_info.startswith('/static/') or request.path_info == '/favicon.ico':
+            return None
+        if request.method == 'OPTIONS':
+            return None
+
+        if request.path_info == '/':
+            return None
 
         public_paths = [
             '/api/auth/login',
             '/api/auth/register',
             '/api/auth/token/refresh',
-            '/admin',
-            '/admin/login',
         ]
 
         current_path = request.path_info.rstrip('/') 
@@ -34,4 +36,4 @@ class JWTAuthenticationMiddleware(MiddlewareMixin):
             AccessToken(token)
             return None
         except (IndexError, TokenError, InvalidToken) as e:
-            return JsonResponse({'error': 'Invalid token'}, status=401) 
+            return JsonResponse({'error': 'Invalid token'}, status=401)
